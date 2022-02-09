@@ -11,7 +11,7 @@
     password: "{{ random_pwd.stdout | string |  password_hash('sha512') }}"
     update_password: always
 
-- name: Save password on file. TODO: Move to Vault
+- name: 'Save password on file. TODO: Move to Vault'
   copy:
     content: '{{ random_pwd.stdout}}'
     dest: '/home/{{ username }}/pssw.txt'
