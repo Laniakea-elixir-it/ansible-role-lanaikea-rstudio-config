@@ -1,19 +1,18 @@
 ---
 # tasks file for ansible-role-laniakea-rstudio-express-config
 
-- name: Create rstudio user random passwd
-  command: "/opt/pwd_generator.py -l 20 -p "
-  register: random_pwd
+- name: Change RStudio user password
+  import_tasks: change_password.yml
 
-- name: Change studio password
-  user:
-    name: studio
-    password: "{{ random_pwd.stdout | string |  password_hash('sha512') }}"
-    update_password: always
-
-- name: 'Save password on file. TODO: Move to Vault'
-  copy:
-    content: '{{ random_pwd.stdout}}'
-    dest: '/home/{{ username }}/pssw.txt'
+- name: Start rstudio-server
+  systemd:
+    state: started
+    enabled: yes
+    name: rstudio-server.service
   become: yes
-  become_user: "{{ username }}"
+
+- name: Wait RStudio
+  wait_for:
+    host: 127.0.0.1
+    port: '8080'
+    timeout: 300
