@@ -1,3 +1,5 @@
 ---
 # defaults file for ansible-role-laniakea-rstudio-express-config
 username: studio
+
+retrieve_passphrase_from_vault: false
